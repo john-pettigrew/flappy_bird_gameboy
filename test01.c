@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include "sprites.c"
+#include "pipes.c"
 #include <gb/gb.h>
 
 int gravity = 4;
@@ -53,11 +54,39 @@ void update(){
 	drawCharacter();
 }
 
+int i;
+int pipeStartY;
+void drawPipe(struct pipe *pipe){
+	//Pipe top
+	set_sprite_tile(2, 8);
+	set_sprite_tile(3, 10);
+
+	move_sprite(2, pipe->x, pipe->y);
+	move_sprite(3, pipe->x+8, pipe->y);
+	pipeStartY = pipe->y + 8;
+
+	for(i = 0; i <= 12; i+=2){
+		//Pipe bottom
+		set_sprite_tile(4+i, 12);
+		set_sprite_tile(5+i, 14);
+
+		move_sprite(4+i, pipe->x, pipeStartY+(8*i));
+		move_sprite(5+i, pipe->x+8, pipeStartY+(8*i));
+	}
+}
+struct pipe p;
 void main(){
 	SPRITES_8x16;
-	set_sprite_data(0, 8, Stripes);
+	set_sprite_data(0, 8, BirdData);
 	set_sprite_tile(0, 0);
 	set_sprite_tile(1, 2);
+
+	p.x = 75;
+	p.y = 70;
+
+	set_sprite_data(8, 8, PipesData);
+	
+	drawPipe(&p);
 
 	SHOW_SPRITES;
 

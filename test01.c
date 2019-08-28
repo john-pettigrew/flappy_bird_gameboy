@@ -10,6 +10,13 @@ int playerPosY = 60;
 int lastAStatus = 0;
 int currentPlayerFrame = 0;
 
+const int numPipes = 2;
+struct pipe pipes[2];
+int pipeDistance = 125;
+int pipeSpawnStart = 20;
+int pipeSpeed = 3;
+int i, j, k, l, m;
+
 void applyInputForce(){
 	if(joypad() == J_A){
 		if(lastAStatus == 0){
@@ -46,47 +53,70 @@ void drawCharacter(){
 	move_sprite(1, playerPosX + 8, playerPosY);
 }
 
+movePipes(){
+	for(i = 0; i < numPipes; i++){
+		pipes[i].x = pipes[i].x - pipeSpeed;
+	}
+}
+
+void initPipes(){
+	for(j = 0; j < numPipes; j++){
+		pipes[j].x = pipeSpawnStart + (pipeDistance * j);
+		pipes[j].y = 70;
+		pipes[j].tileStart = 2 + (j * 16);
+
+		//Pipe top
+		set_sprite_tile(pipes[j].tileStart, 8);
+		set_sprite_tile(pipes[j].tileStart + 1, 10);
+
+		for(k = 0; k <= 12; k+=2){
+			//Pipe bottom
+			set_sprite_tile(pipes[j].tileStart + 2 + k, 12);
+			set_sprite_tile(pipes[j].tileStart + 3 + k, 14);
+		}
+	}
+}
+
+int pipeStartY;
+void drawPipe(int pipeNum){
+	//Pipe top
+	move_sprite(pipes[pipeNum].tileStart, pipes[pipeNum].x, pipes[pipeNum].y);
+	move_sprite(pipes[pipeNum].tileStart + 1, pipes[pipeNum].x+8, pipes[pipeNum].y);
+	pipeStartY = pipes[pipeNum].y + 8;
+
+	for(l = 0; l <= 12; l+=2){
+		//Pipe bottom
+		move_sprite(pipes[pipeNum].tileStart + 2 + l, pipes[pipeNum].x, pipeStartY+(8*l));
+		move_sprite(pipes[pipeNum].tileStart + 3 + l, pipes[pipeNum].x+8, pipeStartY+(8*l));
+	}
+}
+
+void drawAllPipes(){
+	for(m = 0; m < numPipes; m++){
+		drawPipe(m);
+	}
+}
+
 void update(){
 	applyInputForce();
 	applyGravity();
 
 	characterAnimation();
 	drawCharacter();
+
+	movePipes();
+	drawAllPipes();
 }
 
-int i;
-int pipeStartY;
-void drawPipe(struct pipe *pipe){
-	//Pipe top
-	set_sprite_tile(2, 8);
-	set_sprite_tile(3, 10);
-
-	move_sprite(2, pipe->x, pipe->y);
-	move_sprite(3, pipe->x+8, pipe->y);
-	pipeStartY = pipe->y + 8;
-
-	for(i = 0; i <= 12; i+=2){
-		//Pipe bottom
-		set_sprite_tile(4+i, 12);
-		set_sprite_tile(5+i, 14);
-
-		move_sprite(4+i, pipe->x, pipeStartY+(8*i));
-		move_sprite(5+i, pipe->x+8, pipeStartY+(8*i));
-	}
-}
-struct pipe p;
 void main(){
 	SPRITES_8x16;
 	set_sprite_data(0, 8, BirdData);
 	set_sprite_tile(0, 0);
 	set_sprite_tile(1, 2);
 
-	p.x = 75;
-	p.y = 70;
-
 	set_sprite_data(8, 8, PipesData);
-	
-	drawPipe(&p);
+
+	initPipes();
 
 	SHOW_SPRITES;
 

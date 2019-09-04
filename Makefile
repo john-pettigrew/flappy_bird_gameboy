@@ -1,6 +1,6 @@
 CC	= ../../../bin/lcc -Wa-l -Wl-m -Wl-j
 
-BINS	= test01.gb
+BINS	= main.gb
 
 all:	$(BINS)
 
@@ -23,5 +23,5 @@ make.bat: Makefile
 clean:
 	rm -f *.o *.lst *.map *.gb *~ *.rel *.cdb *.ihx *.lnk *.sym *.asm
 
-test01.gb: test01.o
-	$(CC) -o test01.gb test01.o
+main.gb: main.o
+	$(CC) -o main.gb main.o

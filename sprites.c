@@ -137,7 +137,7 @@ unsigned char ClearPipeBkgData[] =
 	0x00, 0x00,	
 };
 
-unsigned char pipeTileSets[4][4] = {
+const unsigned char availablePipeTiles[4][4] = {
 	//pipeTopData,
 	{
 		0x0c, 0x0e,

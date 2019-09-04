@@ -16,7 +16,7 @@ const int BOTTOM_PIPE_TILE = 8;
 const int MID_PIPE_TILE = 10;
 const int TOP_PIPE_TILE = 10;
 
-#define NUM_PIPES 1
+#define NUM_PIPES 2
 struct pipe pipes[NUM_PIPES];
 int pipeDistanceX = 16;
 int pipeSpawnStart = 16;
@@ -73,9 +73,6 @@ void clearBackground(){
 
 int pipeToAssign = 0;
 void setPipeData(int pipePos){
-	pipes[pipePos].x = 34;
-	pipes[pipePos].y = ((rand() % (4 + 1 - 2)) + 2) * 4;
-
 	for(n = 0; n < 56; n+=4){
 		//pipe top opening
 		if(n == pipes[pipePos].y - 8){
@@ -134,11 +131,15 @@ void initPipes(){
 void movePipes(){
 	for(i = 0; i < NUM_PIPES; i++){
 		pipes[i].x = pipes[i].x - pipeSpeed;
-		if(pipes[i].x <= 0){
+		/*
+		if(pipes[i].x <= -10){
 			//clearPipe(i);
-			//setPipeData(i);
+			pipes[i].x = 34;
+			pipes[i].y = ((rand() % (4 + 1 - 2)) + 2) * 4;
+			setPipeData(i);
 			drawPipe(i);
 		}
+		*/
 	}
 	scroll_bkg(pipeSpeed, 0);
 }

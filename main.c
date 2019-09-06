@@ -135,17 +135,14 @@ void movePipes(){
 		pipes[i].x = pipes[i].x - pipeSpeed;
 		if(currentScroll >= (SCREEN_MAX_X * 2) + 16){
 			currentScroll = 16;
-			//clearPipe(i);
 			pipes[i].y = ((rand() % (7 + 1 - 4)) + 4) * 4;
 			pipes[i].x = 0;
-			//pipes[i].y = 8;
 			setPipeData(i);
 			drawPipe(i);
 		}
 	}
 	currentScroll += pipeSpeed;
 	scroll_bkg(pipeSpeed, 0);
-	//scroll_bkg(SCREEN_MAX_X * 2, 0);
 }
 
 void update(){

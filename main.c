@@ -15,13 +15,15 @@ int currentPlayerFrame = 0;
 const int BOTTOM_PIPE_TILE = 8;
 const int MID_PIPE_TILE = 10;
 const int TOP_PIPE_TILE = 10;
+const int SCREEN_MAX_X = 128;
 
-#define NUM_PIPES 2
+#define NUM_PIPES 1
 struct pipe pipes[NUM_PIPES];
 int pipeDistanceX = 16;
-int pipeSpawnStart = 16;
-int pipeSpeed = 2;
+int pipeSpawnStart = 0;
+int pipeSpeed = 3;
 int i, j, k, l, m, n, o;
+int currentScroll = 0;
 
 void applyInputForce(){
 	if(joypad() == J_A){
@@ -131,17 +133,19 @@ void initPipes(){
 void movePipes(){
 	for(i = 0; i < NUM_PIPES; i++){
 		pipes[i].x = pipes[i].x - pipeSpeed;
-		/*
-		if(pipes[i].x <= -10){
+		if(currentScroll >= (SCREEN_MAX_X * 2) + 16){
+			currentScroll = 16;
 			//clearPipe(i);
-			pipes[i].x = 34;
 			pipes[i].y = ((rand() % (4 + 1 - 2)) + 2) * 4;
+			pipes[i].x = 0;
+			//pipes[i].y = 8;
 			setPipeData(i);
 			drawPipe(i);
 		}
-		*/
 	}
+	currentScroll += pipeSpeed;
 	scroll_bkg(pipeSpeed, 0);
+	//scroll_bkg(SCREEN_MAX_X * 2, 0);
 }
 
 void update(){

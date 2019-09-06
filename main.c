@@ -62,7 +62,7 @@ void drawCharacter(){
 }
 
 void drawPipe(int pipeNum){
-	set_bkg_tiles(pipes[pipeNum].x, pipes[pipeNum].y, 2, 28, pipes[pipeNum].pipeData);
+	set_bkg_tiles(pipes[pipeNum].x, 0, 2, 28, pipes[pipeNum].pipeData);
 }
 
 void clearPipe(int pipeNum){
@@ -136,7 +136,7 @@ void movePipes(){
 		if(currentScroll >= (SCREEN_MAX_X * 2) + 16){
 			currentScroll = 16;
 			//clearPipe(i);
-			pipes[i].y = ((rand() % (4 + 1 - 2)) + 2) * 4;
+			pipes[i].y = ((rand() % (7 + 1 - 4)) + 4) * 4;
 			pipes[i].x = 0;
 			//pipes[i].y = 8;
 			setPipeData(i);

@@ -17,6 +17,9 @@ const int MID_PIPE_TILE = 10;
 const int TOP_PIPE_TILE = 10;
 const int SCREEN_MAX_X = 128;
 
+#define MIN_CHARACTER_Y_POS 16
+#define MAX_CHARACTER_Y_POS 144
+
 #define NUM_PIPES 1
 struct pipe pipes[NUM_PIPES];
 int pipeDistanceX = 16;
@@ -46,6 +49,14 @@ void characterAnimation(){
 
 void applyGravity(){
 	playerPosY += gravity;
+}
+
+void handleCharacterExtremes(){
+	if(playerPosY < MIN_CHARACTER_Y_POS){
+		playerPosY = MIN_CHARACTER_Y_POS;
+	}else if(playerPosY > MAX_CHARACTER_Y_POS){
+		playerPosY = MAX_CHARACTER_Y_POS;
+	}
 }
 
 void drawCharacter(){
@@ -148,6 +159,7 @@ void movePipes(){
 void update(){
 	applyInputForce();
 	applyGravity();
+	handleCharacterExtremes();
 
 	characterAnimation();
 	drawCharacter();

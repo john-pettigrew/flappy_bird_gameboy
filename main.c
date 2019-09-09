@@ -5,12 +5,16 @@
 #include "pipes.c"
 #include <gb/gb.h>
 
+enum GameState{MENU, PLAYING, GAMEOVER};
+enum GameState currentGameState = PLAYING;
+
 int gravity = 4;
 int jumpPower = 30;
 int playerPosX = 30;
 int playerPosY = 60;
 int lastAStatus = 0;
 int currentPlayerFrame = 0;
+int scrollPlayerOffset = 0;
 
 const int BOTTOM_PIPE_TILE = 8;
 const int MID_PIPE_TILE = 10;
@@ -25,8 +29,8 @@ struct pipe pipes[NUM_PIPES];
 int pipeDistanceX = 16;
 int pipeSpawnStart = 0;
 int pipeSpeed = 3;
-int i, j, k, l, m, n, o;
-int currentScroll = 0;
+int i, j, k, l, m, n, o, p;
+int currentScroll = (SCREEN_MAX_X * 2);
 
 void applyInputForce(){
 	if(joypad() == J_A){
@@ -72,8 +76,21 @@ void drawCharacter(){
 	move_sprite(1, playerPosX + 8, playerPosY);
 }
 
+void checkForCollisions(){
+	scrollPlayerOffset = currentScroll - playerPosX + 64;
+	for(p = 0; p < NUM_PIPES; p++){
+		if(scrollPlayerOffset > 0 && scrollPlayerOffset < 16){
+			printf("COLLISION");
+		}
+	}
+}
+
+void gameOver(){
+	printf("GAMEOVER");
+}
+
 void drawPipe(int pipeNum){
-	set_bkg_tiles(pipes[pipeNum].x, 0, 2, 28, pipes[pipeNum].pipeData);
+	set_bkg_tiles(0, 0, 2, 28, pipes[pipeNum].pipeData);
 }
 
 void clearPipe(int pipeNum){
@@ -165,6 +182,7 @@ void update(){
 	drawCharacter();
 
 	movePipes();
+	checkForCollisions();
 }
 
 void main(){
@@ -179,7 +197,6 @@ void main(){
 
 	clearBackground();
 	initPipes();
-
 
 	HIDE_WIN;
 	SHOW_SPRITES;

@@ -12,6 +12,9 @@ int playerPosY = 60;
 int lastAStatus = 0;
 int currentPlayerFrame = 0;
 int scrollPlayerOffset = 0;
+int spawnMarker = 0;
+int currentPoints = 0;
+int currentPointCounted = 0;
 
 const int BOTTOM_PIPE_TILE = 8;
 const int MID_PIPE_TILE = 10;
@@ -24,7 +27,7 @@ const int SCREEN_MAX_X = 128;
 #define NUM_PIPES 1
 struct pipe pipes[NUM_PIPES];
 int pipeDistanceX = 16;
-int pipeSpawnStart = 0;
+int pipeSpawnStart = -16;
 int pipeSpeed = 3;
 int i, j, k, l, m, n, o, p;
 int currentScroll = (SCREEN_MAX_X * 2);
@@ -74,16 +77,18 @@ void drawCharacter(){
 }
 
 void checkForCollisions(){
-	scrollPlayerOffset = currentScroll - playerPosX + 64;
-	for(p = 0; p < NUM_PIPES; p++){
-		if(scrollPlayerOffset > 0 && scrollPlayerOffset < 16){
-			printf("COLLISION");
+	if(spawnMarker >= 1){
+		if(currentScroll >= 217 && currentScroll <= 217 + 16){
+			if(playerPosY > (pipes[0].y + 8) * 4 || playerPosY < (pipes[0].y - 8) * 4){
+				transitionToGameover();
+			}else{
+				currentPointCounted = 1;
+				currentPoints += 1;
+			}
+		}else{
+			currentPointCounted = 0;
 		}
 	}
-}
-
-void gameOver(){
-	printf("GAMEOVER");
 }
 
 void drawPipe(int pipeNum){
@@ -135,7 +140,7 @@ void setPipeData(int pipePos){
 
 void initPipes(){
 	for(j = 0; j < NUM_PIPES; j++){
-		pipes[j].x = pipeSpawnStart + (pipeDistanceX * j);
+		pipes[j].x = -16;
 		pipes[j].y = 70;
 		pipes[j].tileStart = 2 + (j * 20);
 
@@ -160,10 +165,13 @@ void movePipes(){
 		pipes[i].x = pipes[i].x - pipeSpeed;
 		if(currentScroll >= (SCREEN_MAX_X * 2) + 16){
 			currentScroll = 16;
+			pipes[i].x = -16;
 			pipes[i].y = ((rand() % (7 + 1 - 4)) + 4) * 4;
-			pipes[i].x = 0;
 			setPipeData(i);
 			drawPipe(i);
+			if(spawnMarker < 1){
+				spawnMarker += 1;
+			}
 		}
 	}
 	currentScroll += pipeSpeed;
@@ -184,6 +192,8 @@ void playStateUpdate(){
 
 playStateInit(){
 	//srand(time(0));
+	currentPoints = 0;
+	currentPointCounted = 0;
 	set_sprite_data(0, 8, BirdData);
 	set_sprite_tile(0, 0);
 	set_sprite_tile(1, 2);

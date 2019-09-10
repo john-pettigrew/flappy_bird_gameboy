@@ -17,6 +17,16 @@ void update(){
 	}
 }
 
+void transitionToGameover(){
+	currentGameState = GAMEOVER;
+	printf("GAMEOVER");
+}
+
+void transitionToPlaying(){
+	playStateInit();
+	currentGameState = PLAYING;
+}
+
 void main(){
 	SPRITES_8x16;
 	DISPLAY_ON;
@@ -24,7 +34,7 @@ void main(){
 	SHOW_BKG;
 
 	//TEMP
-	playStateInit();
+	transitionToPlaying();
 
 	while(1){
 		update();

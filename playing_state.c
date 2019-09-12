@@ -4,6 +4,7 @@
 #include "sprites.c"
 #include "pipes.c"
 #include <gb/gb.h>
+#include <gb/font.h>
 
 int gravity = 4;
 int jumpPower = 30;
@@ -15,6 +16,14 @@ int scrollPlayerOffset = 0;
 int spawnMarker = 0;
 int currentPoints = 0;
 int currentPointCounted = 0;
+
+font_t min_font;
+
+//TODO
+unsigned char helloWorld[] = 
+{
+  0x13,0x10,0x17,0x17,0x1A
+};
 
 const int BOTTOM_PIPE_TILE = 8;
 const int MID_PIPE_TILE = 10;
@@ -79,7 +88,7 @@ void drawCharacter(){
 void checkForCollisions(){
 	if(spawnMarker >= 1){
 		if(currentScroll >= 217 && currentScroll <= 217 + 16){
-			if(playerPosY > (pipes[0].y + 8) * 4 || playerPosY < (pipes[0].y - 8) * 4){
+			if(playerPosY > (pipes[0].y + 4) * 5 || playerPosY < (pipes[0].y - 4) * 5){
 				transitionToGameover();
 			}else{
 				currentPointCounted = 1;
@@ -198,8 +207,13 @@ playStateInit(){
 	set_sprite_tile(0, 0);
 	set_sprite_tile(1, 2);
 
-	set_bkg_data(0, 64, PipesData);
+	set_bkg_data(37, 64, PipesData);
 
+	font_init();
+	min_font = font_load(font_min);
+	font_set(min_font);
+	set_win_tiles(0, 0, 5, 1, helloWorld);
 	clearBackground();
+
 	initPipes();
 }

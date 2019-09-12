@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <gb/gb.h>
 #include "playing_state.c"
+#include "gameover_state.c"
 
 enum GameState{MENU, PLAYING, GAMEOVER};
 enum GameState currentGameState = PLAYING;
@@ -13,13 +14,14 @@ void update(){
 			playStateUpdate();
 			break;
 		case GAMEOVER:
+			gameoverStateUpdate();
 			break;
 	}
 }
 
 void transitionToGameover(){
+	gameoverStateInit();
 	currentGameState = GAMEOVER;
-	printf("GAMEOVER");
 }
 
 void transitionToPlaying(){
@@ -32,6 +34,7 @@ void main(){
 	DISPLAY_ON;
 	SHOW_SPRITES;
 	SHOW_BKG;
+	SHOW_WIN;
 
 	//TEMP
 	transitionToPlaying();

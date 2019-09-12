@@ -1,12 +1,16 @@
-#include <stdio.h>
-#include <time.h>
-#include "sprites.c"
-#include "pipes.c"
 #include <gb/gb.h>
-#include <gb/font.h>
+
+void checkForRestart(){
+	if(joypad() == J_START){
+		transitionToPlaying();
+	}
+}
 
 void gameoverStateUpdate(){
+	checkForRestart();
 }
 
 gameoverStateInit(){
+	printf("GAMEOVER\n");
+	printf("PRESS START");
 }

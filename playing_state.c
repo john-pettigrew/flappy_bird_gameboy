@@ -6,8 +6,8 @@
 #include <gb/gb.h>
 #include <gb/font.h>
 
-int gravity = 4;
-int jumpPower = 30;
+int windowX = 10;
+int windowY = 130;
 int playerPosX = 30;
 int playerPosY = 60;
 int lastAStatus = 0;
@@ -16,13 +16,13 @@ int scrollPlayerOffset = 0;
 int spawnMarker = 0;
 int currentPoints = 0;
 int currentPointCounted = 0;
-
-font_t min_font;
+#define MAX_SCORE_LENGTH  3
+unsigned char currentScoreDisplay[MAX_SCORE_LENGTH];
 
 //TODO
 unsigned char helloWorld[] = 
 {
-  0x13,0x10,0x17,0x17,0x1A
+  0x02
 };
 
 const int BOTTOM_PIPE_TILE = 8;
@@ -38,10 +38,24 @@ struct pipe pipes[NUM_PIPES];
 int pipeDistanceX = 16;
 int pipeSpawnStart = -16;
 int pipeSpeed = 3;
-int i, j, k, l, m, n, o, p;
 int currentScroll = (SCREEN_MAX_X * 2);
 
+void setScoreWinData(){
+	int scoreTracker = currentPoints;
+	int i;
+	for(i = 0; i < MAX_SCORE_LENGTH; i++){
+		currentScoreDisplay[i] = (unsigned char) ((scoreTracker % 10) + 2);
+		scoreTracker = scoreTracker / 10;
+	}
+}
+
+void updateScoreDisplay(){
+	setScoreWinData();
+	set_win_tiles(0, 0, MAX_SCORE_LENGTH, 1, currentScoreDisplay);
+}
+
 void applyInputForce(){
+	int jumpPower = 30;
 	if(joypad() == J_A){
 		if(lastAStatus == 0){
 			lastAStatus = 1;
@@ -61,6 +75,7 @@ void characterAnimation(){
 }
 
 void applyGravity(){
+	int gravity = 4;
 	playerPosY += gravity;
 }
 
@@ -90,7 +105,7 @@ void checkForCollisions(){
 		if(currentScroll >= 217 && currentScroll <= 217 + 16){
 			if(playerPosY > (pipes[0].y + 4) * 5 || playerPosY < (pipes[0].y - 4) * 5){
 				transitionToGameover();
-			}else{
+			}else if(currentPointCounted == 0){
 				currentPointCounted = 1;
 				currentPoints += 1;
 			}
@@ -108,12 +123,17 @@ void clearPipe(int pipeNum){
 	set_bkg_tiles(pipes[pipeNum].x, pipes[pipeNum].y, 2, 28, ClearPipeBkgData);
 }
 
+void clearWindow(){
+	set_win_tiles(0, 0, 32, 32, ClearBkgData);
+}
+
 void clearBackground(){
 	set_bkg_tiles(0, 0, 32, 32, ClearBkgData);
 }
 
 int pipeToAssign = 0;
 void setPipeData(int pipePos){
+	int n, o;
 	for(n = 0; n < 56; n+=4){
 		//pipe top opening
 		if(n == pipes[pipePos].y - 8){
@@ -148,6 +168,7 @@ void setPipeData(int pipePos){
 }
 
 void initPipes(){
+	int j;
 	for(j = 0; j < NUM_PIPES; j++){
 		pipes[j].x = -16;
 		pipes[j].y = 70;
@@ -170,6 +191,7 @@ void initPipes(){
 }
 
 void movePipes(){
+	int i;
 	for(i = 0; i < NUM_PIPES; i++){
 		pipes[i].x = pipes[i].x - pipeSpeed;
 		if(currentScroll >= (SCREEN_MAX_X * 2) + 16){
@@ -197,23 +219,31 @@ void playStateUpdate(){
 
 	movePipes();
 	checkForCollisions();
+	updateScoreDisplay();
 }
 
 playStateInit(){
-	//srand(time(0));
+	font_t min_font;
+
+	spawnMarker = 0;
+	playerPosX = 30;
+	playerPosY = 60;
 	currentPoints = 0;
+
 	currentPointCounted = 0;
 	set_sprite_data(0, 8, BirdData);
 	set_sprite_tile(0, 0);
 	set_sprite_tile(1, 2);
 
-	set_bkg_data(37, 64, PipesData);
+	set_bkg_data(37, 16, PipesData);
 
 	font_init();
 	min_font = font_load(font_min);
 	font_set(min_font);
-	set_win_tiles(0, 0, 5, 1, helloWorld);
+	move_win(windowX, windowY);
+
 	clearBackground();
+	clearWindow();
 
 	initPipes();
 }

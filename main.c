@@ -2,13 +2,23 @@
 #include <gb/gb.h>
 #include "playing_state.c"
 #include "gameover_state.c"
+#include "menu_state.c"
 
 enum GameState{MENU, PLAYING, GAMEOVER};
 enum GameState currentGameState = PLAYING;
 
+void clearWindow(){
+	set_win_tiles(0, 0, 32, 32, ClearBkgData);
+}
+
+void clearBackground(){
+	set_bkg_tiles(0, 0, 32, 32, ClearBkgData);
+}
+
 void update(){
 	switch(currentGameState){
 		case MENU:
+			menuStateUpdate();
 			break;
 		case PLAYING:
 			playStateUpdate();
@@ -29,6 +39,11 @@ void transitionToPlaying(){
 	currentGameState = PLAYING;
 }
 
+void transitionToMenu(){
+	menuStateInit();
+	currentGameState = MENU;
+}
+
 void enableSound(){
 	NR52_REG = 0x80;
 	NR50_REG = 0x77;
@@ -44,7 +59,7 @@ void main(){
 	enableSound();
 
 	//TEMP
-	transitionToPlaying();
+	transitionToMenu();
 
 	while(1){
 		update();

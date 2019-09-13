@@ -126,14 +126,6 @@ void clearPipe(int pipeNum){
 	set_bkg_tiles(pipes[pipeNum].x, pipes[pipeNum].y, 2, 28, ClearPipeBkgData);
 }
 
-void clearWindow(){
-	set_win_tiles(0, 0, 32, 32, ClearBkgData);
-}
-
-void clearBackground(){
-	set_bkg_tiles(0, 0, 32, 32, ClearBkgData);
-}
-
 int pipeToAssign = 0;
 void setPipeData(int pipePos){
 	int n, o;

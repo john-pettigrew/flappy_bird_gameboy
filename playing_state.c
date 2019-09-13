@@ -34,6 +34,14 @@ int pipeSpawnStart = -16;
 int pipeSpeed = 3;
 int currentScroll = (SCREEN_MAX_X * 2);
 
+void playJumpSound(){
+	NR10_REG = 0x76;
+	NR11_REG = 0x84;
+	NR12_REG = 0x53;
+	NR13_REG = 0x06;
+	NR14_REG = 0x87;
+}
+
 void setScoreWinData(){
 	int scoreTracker = currentPoints;
 	int i;
@@ -54,6 +62,7 @@ void applyInputForce(){
 		if(lastAStatus == 0){
 			lastAStatus = 1;
 			playerPosY -= jumpPower;
+			playJumpSound();
 		}
 	}else{
 		lastAStatus = 0;

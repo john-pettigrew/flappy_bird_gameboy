@@ -29,12 +29,19 @@ void transitionToPlaying(){
 	currentGameState = PLAYING;
 }
 
+void enableSound(){
+	NR52_REG = 0x80;
+	NR50_REG = 0x77;
+	NR51_REG = 0xFF;
+}
+
 void main(){
 	SPRITES_8x16;
 	DISPLAY_ON;
 	SHOW_SPRITES;
 	SHOW_BKG;
 	SHOW_WIN;
+	enableSound();
 
 	//TEMP
 	transitionToPlaying();

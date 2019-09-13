@@ -6,6 +6,11 @@
 #include <gb/gb.h>
 #include <gb/font.h>
 
+#define MAX_SCORE_LENGTH  3
+#define MIN_CHARACTER_Y_POS 16
+#define MAX_CHARACTER_Y_POS 144
+#define NUM_PIPES 1
+
 int windowX = 10;
 int windowY = 130;
 int playerPosX = 30;
@@ -16,24 +21,13 @@ int scrollPlayerOffset = 0;
 int spawnMarker = 0;
 int currentPoints = 0;
 int currentPointCounted = 0;
-#define MAX_SCORE_LENGTH  3
 unsigned char currentScoreDisplay[MAX_SCORE_LENGTH];
-
-//TODO
-unsigned char helloWorld[] = 
-{
-  0x02
-};
 
 const int BOTTOM_PIPE_TILE = 8;
 const int MID_PIPE_TILE = 10;
 const int TOP_PIPE_TILE = 10;
 const int SCREEN_MAX_X = 128;
 
-#define MIN_CHARACTER_Y_POS 16
-#define MAX_CHARACTER_Y_POS 144
-
-#define NUM_PIPES 1
 struct pipe pipes[NUM_PIPES];
 int pipeDistanceX = 16;
 int pipeSpawnStart = -16;
